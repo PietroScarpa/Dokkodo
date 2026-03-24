@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GreenStamp — Artefatto Operativo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,300&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0e0e;
+    --surface: #141414;
+    --border: #2a2a2a;
+    --border-light: #1e1e1e;
+    --text-primary: #e8e8e4;
+    --text-secondary: #7a7a72;
+    --text-muted: #444440;
+    --accent: #4a7c59;
+    --accent-dim: #2a4a34;
+    --accent-glow: rgba(74, 124, 89, 0.15);
+    --stamp: #3d6b4a;
+    --warning: #8a7040;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: var(--sans);
+    font-weight: 300;
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  /* ── HEADER ── */
+  .site-header {
+    border-bottom: 1px solid var(--border);
+    padding: 18px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .site-logo {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .site-logo span {
+    color: var(--accent);
+  }
+
+  .nav-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* ── MAIN LAYOUT ── */
+  .page {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 64px 48px 120px;
+  }
+
+  /* ── ARTIFACT HEADER ── */
+  .artifact-meta {
+    display: flex;
+    align-items: flex-start;
+    gap: 32px;
+    margin-bottom: 56px;
+    padding-bottom: 48px;
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .stamp-mark {
+    flex-shrink: 0;
+    width: 72px;
+    height: 72px;
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background: var(--accent-glow);
+  }
+
+  .stamp-mark::before {
+    content: '';
+    position: absolute;
+    width: 62px;
+    height: 62px;
+    border: 1px solid var(--accent-dim);
+    border-radius: 50%;
+  }
+
+  .stamp-inner {
+    font-family: var(--mono);
+    font-size: 8px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  .artifact-title-block {
+    flex: 1;
+  }
+
+  .artifact-id {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    opacity: 0.7;
+  }
+
+  h1 {
+    font-family: var(--mono);
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    margin-bottom: 10px;
+  }
+
+  .artifact-tagline {
+    font-size: 14px;
+    color: var(--text-secondary);
+    font-weight: 300;
+    line-height: 1.6;
+    max-width: 520px;
+  }
+
+  .meta-badges {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+
+  .badge {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    border-radius: 2px;
+  }
+
+  .badge.active {
+    border-color: var(--accent-dim);
+    color: var(--accent);
+    background: var(--accent-glow);
+  }
+
+  /* ── SECTION ── */
+  .section {
+    margin-bottom: 52px;
+  }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 400;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--accent-dim);
+    max-width: 200px;
+  }
+
+  .section-title {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+    letter-spacing: 0.02em;
+  }
+
+  .prose {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--text-secondary);
+    font-weight: 300;
+    max-width: 640px;
+  }
+
+  .prose + .prose {
+    margin-top: 12px;
+  }
+
+  .prose strong {
+    color: var(--text-primary);
+    font-weight: 400;
+  }
+
+  /* ── PROBLEM / SOLUTION SPLIT ── */
+  .split-block {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 8px;
+  }
+
+  .split-cell {
+    background: var(--surface);
+    padding: 24px;
+  }
+
+  .split-cell-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+  }
+
+  .split-cell.before .split-cell-label {
+    color: var(--warning);
+  }
+
+  .split-cell.after .split-cell-label {
+    color: var(--accent);
+  }
+
+  .split-cell p {
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--text-secondary);
+    font-weight: 300;
+  }
+
+  /* ── PROCESS FLOW ── */
+  .process-steps {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .step {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    gap: 0;
+    position: relative;
+  }
+
+  .step-number-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 4px;
+  }
+
+  .step-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--accent);
+    width: 24px;
+    height: 24px;
+    border: 1px solid var(--accent-dim);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: var(--accent-glow);
+  }
+
+  .step-line {
+    flex: 1;
+    width: 1px;
+    background: var(--border);
+    margin-top: 4px;
+    min-height: 24px;
+  }
+
+  .step:last-child .step-line {
+    display: none;
+  }
+
+  .step-content {
+    padding: 0 0 28px 20px;
+  }
+
+  .step-title {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+    letter-spacing: 0.02em;
+  }
+
+  .step-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  .step-systems {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+  }
+
+  .sys-tag {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    padding: 2px 8px;
+    letter-spacing: 0.1em;
+  }
+
+  /* ── OUTPUT BLOCK ── */
+  .output-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  .output-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 20px;
+  }
+
+  .output-type {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+    font-weight: 400;
+  }
+
+  .output-name {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+  }
+
+  .output-desc {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  /* ── LEARNING BLOCK ── */
+  .learning-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    padding: 24px 28px;
+    margin-top: 8px;
+  }
+
+  .learning-block p {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--text-secondary);
+    font-weight: 300;
+    font-style: italic;
+  }
+
+  .learning-block p + p {
+    margin-top: 10px;
+  }
+
+  /* ── PRINCIPLES ── */
+  .principles-list {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .principle-item {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .principle-mark {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--accent);
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+
+  .principle-text {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  .principle-text strong {
+    color: var(--text-primary);
+    font-weight: 400;
+  }
+
+  /* ── FOOTER ── */
+  .artifact-footer {
+    margin-top: 72px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border-light);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .footer-stamp {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+  }
+
+  .footer-stamp span {
+    color: var(--accent);
+  }
+
+  .back-link {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .back-link:hover {
+    color: var(--accent);
+  }
+
+  /* ── PLACEHOLDER NOTICE ── */
+  .placeholder {
+    background: rgba(138, 112, 64, 0.08);
+    border: 1px dashed var(--warning);
+    padding: 12px 16px;
+    margin-top: 8px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--warning);
+    letter-spacing: 0.05em;
+  }
+
+  @media (max-width: 640px) {
+    .page { padding: 40px 24px 80px; }
+    .site-header { padding: 16px 24px; }
+    .artifact-meta { flex-direction: column; gap: 20px; }
+    .split-block { grid-template-columns: 1fr; }
+    .output-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-logo">La Via della Solitudine <span>//</span> Dokkōdō</div>
+  <div class="nav-tag">Artefatto Operativo</div>
+</header>
+
+<main class="page">
+
+  <!-- ── ARTIFACT HEADER ── -->
+  <div class="artifact-meta">
+    <div class="stamp-mark">
+      <div class="stamp-inner">GREEN<br>STAMP</div>
+    </div>
+    <div class="artifact-title-block">
+      <div class="artifact-id">ART-001 &nbsp;·&nbsp; Gate Operativo</div>
+      <h1>GreenStamp</h1>
+      <p class="artifact-tagline">
+        Sistema di allineamento tra cartaceo operativo e gestionali digitali. Verifica che una pratica sia realmente "lavorabile" prima che entri in produzione.
+      </p>
+      <div class="meta-badges">
+        <span class="badge active">In uso</span>
+        <span class="badge">Process Control</span>
+        <span class="badge">Multi-sistema</span>
+        <span class="badge">Tracciabilità</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SEZIONE 1: CONTESTO ── -->
+  <div class="section">
+    <div class="section-label">01 — Contesto</div>
+
+    <p class="prose">
+      GreenStamp nasce in un ambiente operativo in cui <strong>tre sistemi distinti</strong> — cartaceo fisico, gestionale legacy e strumenti digitali operativi — coesistono senza un protocollo di sincronizzazione. Il risultato: pratiche che sembrano complete ma non lo sono; lavorazioni avviate su basi incomplete; errori scoperti a valle quando il costo di correzione è già alto.
+    </p>
+    <p class="prose">
+      Il problema non era tecnico. Era di visibilità: nessuno aveva un modo rapido per sapere se una pratica fosse davvero <strong>pronta a essere lavorata</strong>.
+    </p>
+    <p class="prose" style="margin-top:16px; padding-top:16px; border-top: 1px solid var(--border-light);">
+      <strong>Origine del nome.</strong> Il bollino è verde. Non per un'estetica deliberata, ma perché il verde funziona come segnale istintivo: passa, è a posto, puoi procedere. Il nome è nato dall'oggetto fisico, non il contrario. Questo conta: il sistema è stato costruito attorno a ciò che già esisteva nell'ambiente, non importato dall'esterno.
+    </p>
+  </div>
+
+  <!-- ── SEZIONE 2: PROBLEMA / SOLUZIONE ── -->
+  <div class="section">
+    <div class="section-label">02 — Prima / Dopo</div>
+
+    <div class="split-block">
+      <div class="split-cell before">
+        <div class="split-cell-label">Senza sistema</div>
+        <p>Pratiche entravano in produzione non registrate o con dati incompleti. Il disallineamento tra cartaceo e digitale era invisibile fino al momento del problema. La verifica dipendeva dalla memoria individuale.</p>
+      </div>
+      <div class="split-cell after">
+        <div class="split-cell-label">Con GreenStamp</div>
+        <p>Ogni pratica supera un gate esplicito prima di entrare in lavorazione. Lo stato di completezza è tracciato su due livelli — log digitale e marcatura fisica — e verificabile in qualsiasi momento.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SEZIONE 3: PROCESSO ── -->
+  <div class="section">
+    <div class="section-label">03 — Come funziona</div>
+
+    <div class="process-steps">
+
+      <div class="step">
+        <div class="step-number-col">
+          <div class="step-num">1</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-title">Ricezione pratica</div>
+          <p class="step-desc">La pratica arriva con il suo cartaceo. Prima di qualsiasi azione operativa, viene aperto il flusso di verifica.</p>
+          <div class="step-systems"><span class="sys-tag">cartaceo fisico</span></div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-number-col">
+          <div class="step-num">2</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-title">Verifica multi-sistema</div>
+          <p class="step-desc">Controllo incrociato su tutti i sistemi coinvolti: la pratica è registrata? Caricata correttamente? I dati sono allineati tra il cartaceo e i gestionali digitali?</p>
+          <div class="step-systems">
+            <span class="sys-tag">gestionale legacy</span>
+            <span class="sys-tag">gestionale digitale</span>
+            <span class="sys-tag">documentazione cartacea</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-number-col">
+          <div class="step-num">3</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-title">Decisione di gate</div>
+          <p class="step-desc">Se tutti i controlli passano: si procede. Se c'è un disallineamento: la pratica viene sospesa e il problema viene registrato prima di qualsiasi lavorazione.</p>
+          <div class="step-systems"><span class="sys-tag">gate esplicito</span></div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-number-col">
+          <div class="step-num">4</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-title">Marcatura e log</div>
+          <p class="step-desc">La pratica riceve il bollino fisico sul cartaceo (segno visibile per chiunque la gestisca in seguito) e viene registrata nel log Excel con data, stato e eventuali note.</p>
+          <div class="step-systems">
+            <span class="sys-tag">bollino adesivo fisico</span>
+            <span class="sys-tag">log excel</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── SEZIONE 4: OUTPUT ── -->
+  <div class="section">
+    <div class="section-label">04 — Output tracciabile</div>
+
+    <div class="output-grid">
+      <div class="output-card">
+        <div class="output-type">Traccia fisica</div>
+        <div class="output-name">Bollino adesivo</div>
+        <p class="output-desc">Marcatura visibile sul cartaceo. Segnala a chiunque gestisca la pratica in seguito che il gate è stato superato. Non richiede accesso a sistemi digitali per essere verificata.</p>
+      </div>
+      <div class="output-card">
+        <div class="output-type">Traccia digitale</div>
+        <div class="output-name">Log Excel</div>
+        <p class="output-desc">Registro datato con stato, operatore e note. Traccia anche le modifiche successive alla pratica, creando una cronologia verificabile per ogni entry. Permette audit retroattivo e individuazione di pattern nei disallineamenti.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SEZIONE 5: COSA HO IMPARATO ── -->
+  <div class="section">
+    <div class="section-label">05 — Osservazioni sul campo</div>
+
+    <div class="learning-block">
+      <p>
+        Il sistema non risolve il problema a monte — i disallineamenti continuano a esistere. Quello che cambia è la visibilità: il problema viene intercettato <strong>prima della lavorazione</strong>, non durante o dopo. La perdita di tempo si sposta da "correggere un errore in produzione" a "verificare prima di procedere".
+      </p>
+      <p>
+        La doppia traccia fisica/digitale è una scelta deliberata: in ambienti dove l'accesso ai sistemi non è sempre garantito o immediato, il bollino fisico funziona come segnale di fallback leggibile da chiunque, senza credenziali.
+      </p>
+    </div>
+
+    <div class="placeholder" style="margin-top:16px;">
+      [NOTA PERSONALE — da completare] Aggiungere: numero approssimativo di pratiche processate, tipo di errori intercettati più frequenti, eventuale evoluzione del sistema nel tempo.
+    </div>
+  </div>
+
+  <!-- ── SEZIONE 6: PRINCIPI OPERATIVI ── -->
+  <div class="section">
+    <div class="section-label">06 — Principi applicati</div>
+
+    <div class="principles-list">
+      <div class="principle-item">
+        <span class="principle-mark">—</span>
+        <span class="principle-text"><strong>Visibilità prima della velocità.</strong> Un gate esplicito rallenta la singola pratica. Elimina le rilavorazioni downstream.</span>
+      </div>
+      <div class="principle-item">
+        <span class="principle-mark">—</span>
+        <span class="principle-text"><strong>Traccia ridondante by design.</strong> Due sistemi di registrazione indipendenti non sono overhead: sono resilienza in ambienti dove i sistemi falliscono.</span>
+      </div>
+      <div class="principle-item">
+        <span class="principle-mark">—</span>
+        <span class="principle-text"><strong>Il sistema funziona anche quando chi lo ha creato non c'è.</strong> Chiunque legga il bollino sa che la pratica è passata dal gate. La conoscenza non è in testa a una persona.</span>
+      </div>
+      <div class="principle-item">
+        <span class="principle-mark">—</span>
+        <span class="principle-text"><strong>Minimalismo operativo.</strong> Nessun tool aggiuntivo, nessuna procedura formale approvata. Un foglio Excel e degli adesivi. Funziona perché si adatta all'ambiente, non perché lo trasforma.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SEZIONE 7: CONTESTO PROFESSIONALE ── -->
+  <div class="section">
+    <div class="section-label">07 — Rilevanza professionale</div>
+
+    <p class="prose">
+      GreenStamp è un esempio applicato di <strong>process gate</strong> in un contesto ad alta variabilità operativa. I concetti sottostanti — verifica di completezza pre-produzione, doppia tracciabilità, riduzione del costo dell'errore — sono trasferibili a qualsiasi contesto in cui più sistemi informativi coesistono senza integrazione nativa.
+    </p>
+    <p class="prose">
+      Rilevante per ruoli in: operations management, process improvement, quality control, back-office optimization.
+    </p>
+  </div>
+
+  <!-- ── SEZIONE 8: STORIA E VERSIONI ── -->
+  <div class="section">
+    <div class="section-label">08 — Storia e versioni</div>
+
+    <div class="process-steps">
+
+      <div class="step">
+        <div class="step-number-col">
+          <div class="step-num" style="font-size:9px;">v0</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-title">Fastday <span style="font-weight:300; color:var(--text-muted);">— bozza operativa</span></div>
+          <p class="step-desc">Primo tentativo di strutturare la verifica delle pratiche. Non ancora un sistema formalizzato: una procedura informale applicata in modo non sistematico. Ha definito il problema, non la soluzione.</p>
+          <div class="step-systems"><span class="sys-tag">bozza</span></div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-number-col">
+          <div class="step-num" style="font-size:9px;">v1</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-title">GreenStamp <span style="font-weight:300; color:var(--text-muted);">— 01/04/2025</span></div>
+          <p class="step-desc">Prima versione operativa. Introduzione del bollino fisico e del log Excel come doppia traccia sistematica. Il gate diventa esplicito e obbligatorio prima della lavorazione.</p>
+          <div class="step-systems"><span class="sys-tag">operativo</span><span class="sys-tag">bollino + excel</span></div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-number-col">
+          <div class="step-num" style="font-size:9px;">v1.1</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-title">Pete's Courtesy integrato <span style="font-weight:300; color:var(--text-muted);">— 04/11/2025</span></div>
+          <p class="step-desc">Tentativo di estensione del sistema alle vetture di cortesia: modulo cartaceo di stato alla consegna, tracciamento su Excel separato, documentazione fotografica. Il gate di verifica avrebbe creato un punto di contatto operativo con il progetto FMP.</p>
+          <div class="step-systems"><span class="sys-tag">estensione</span><span class="sys-tag">→ FMP</span></div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-number-col">
+          <div class="step-num" style="font-size:9px; color: var(--warning); border-color: var(--warning); background: rgba(138,112,64,0.1);">—</div>
+        </div>
+        <div class="step-content">
+          <div class="step-title">Pete's Courtesy dismesso <span style="font-weight:300; color:var(--text-muted);">— febbraio 2026</span></div>
+          <p class="step-desc">Il modulo strutturato è stato abbandonato per preferenza organizzativa. Il flusso è regredito a comunicazioni non tracciate su canale informale: foto e note inviate su gruppo di messaggistica, senza log centralizzato né verifica sistematica. Il sistema non è stato dismesso per inefficacia tecnica.</p>
+          <div class="step-systems">
+            <span class="sys-tag" style="border-color: var(--warning); color: var(--warning);">dismesso</span>
+            <span class="sys-tag">resistenza organizzativa</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="learning-block" style="margin-top: 20px; border-left-color: var(--warning);">
+      <p>
+        L'estensione alle vetture di cortesia ha incontrato una resistenza che non era tecnica. Il flusso informale preesistente — foto su WhatsApp, nessun log — era percepito come più veloce e meno oneroso, indipendentemente dalla sua verificabilità. <strong>La direzione ha scelto consapevolmente la non-tracciabilità.</strong> Documentarlo è utile: distingue un sistema che non ha funzionato da uno che non è stato lasciato funzionare.
+      </p>
+    </div>
+  </div>
+
+  <!-- ── FOOTER ── -->
+  <div class="artifact-footer">
+    <div class="footer-stamp">ART-001 &nbsp;<span>·</span>&nbsp; GreenStamp &nbsp;<span>·</span>&nbsp; La Via della Solitudine</div>
+    <a href="index.html" class="back-link">← Tutti gli artefatti</a>
+  </div>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Via della Solitudine — Dokkōdō</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,300&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0e0e;
+    --surface: #141414;
+    --border: #2a2a2a;
+    --border-light: #1e1e1e;
+    --text-primary: #e8e8e4;
+    --text-secondary: #7a7a72;
+    --text-muted: #3a3a36;
+    --accent: #4a7c59;
+    --accent-dim: #2a4a34;
+    --accent-glow: rgba(74, 124, 89, 0.12);
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: var(--sans);
+    font-weight: 300;
+    min-height: 100vh;
+    cursor: default;
+  }
+
+  /* ── GRAIN OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.6;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    padding: 20px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border-light);
+    background: rgba(14,14,14,0.92);
+    backdrop-filter: blur(8px);
+  }
+
+  .nav-logo {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-secondary);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .nav-logo em {
+    color: var(--accent);
+    font-style: normal;
+  }
+
+  .nav-right {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 48px 80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards;
+    animation-delay: 0.2s;
+  }
+
+  .hero-title {
+    font-family: var(--mono);
+    font-size: clamp(36px, 6vw, 72px);
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards;
+    animation-delay: 0.35s;
+  }
+
+  .hero-title-jp {
+    font-family: var(--mono);
+    font-size: clamp(14px, 2vw, 22px);
+    font-weight: 300;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    margin-bottom: 40px;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards;
+    animation-delay: 0.5s;
+  }
+
+  .hero-desc {
+    max-width: 560px;
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--text-secondary);
+    font-weight: 300;
+    margin-bottom: 48px;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards;
+    animation-delay: 0.65s;
+  }
+
+  .hero-desc strong {
+    color: var(--text-primary);
+    font-weight: 400;
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards;
+    animation-delay: 0.8s;
+  }
+
+  .cta-link {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid var(--accent-dim);
+    padding-bottom: 2px;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .cta-link:hover {
+    color: var(--text-primary);
+    border-color: var(--text-primary);
+  }
+
+  .cta-separator {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-muted);
+  }
+
+  /* ── VERTICAL TEXT (decorativo) ── */
+  .vertical-text {
+    position: fixed;
+    right: 48px;
+    top: 50%;
+    transform: translateY(-50%) rotate(90deg);
+    transform-origin: center center;
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--text-muted);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    z-index: 1;
+  }
+
+  /* ── DIVIDER ── */
+  .section-divider {
+    height: 1px;
+    background: var(--border-light);
+    margin: 0 48px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── DOKKODO SECTION ── */
+  .dokkodo-section {
+    padding: 96px 48px;
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+
+  .dokkodo-left {}
+
+  .dokkodo-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 24px;
+    font-weight: 400;
+  }
+
+  .dokkodo-title {
+    font-family: var(--mono);
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--text-primary);
+    line-height: 1.3;
+    margin-bottom: 24px;
+    letter-spacing: -0.01em;
+  }
+
+  .dokkodo-title em {
+    color: var(--accent);
+    font-style: normal;
+  }
+
+  .dokkodo-text {
+    font-size: 14px;
+    line-height: 1.85;
+    color: var(--text-secondary);
+    font-weight: 300;
+  }
+
+  .dokkodo-text + .dokkodo-text {
+    margin-top: 14px;
+  }
+
+  .dokkodo-text strong {
+    color: var(--text-primary);
+    font-weight: 400;
+  }
+
+  .dokkodo-right {
+    padding-top: 40px;
+  }
+
+  .musashi-quote {
+    border-left: 2px solid var(--accent-dim);
+    padding: 20px 24px;
+    background: var(--accent-glow);
+    margin-bottom: 24px;
+  }
+
+  .musashi-quote p {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-style: italic;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    letter-spacing: 0.01em;
+  }
+
+  .musashi-quote cite {
+    display: block;
+    margin-top: 12px;
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--text-muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-style: normal;
+  }
+
+  .not-block {
+    border: 1px solid var(--border);
+    padding: 20px 24px;
+  }
+
+  .not-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-secondary);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    font-weight: 400;
+  }
+
+  .not-items {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .not-item {
+    display: flex;
+    gap: 12px;
+    align-items: baseline;
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-family: var(--mono);
+  }
+
+  .not-item::before {
+    content: '✕';
+    color: var(--text-muted);
+    font-size: 9px;
+    flex-shrink: 0;
+  }
+
+  /* ── ARTIFACTS SECTION ── */
+  .artifacts-section {
+    padding: 96px 48px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .artifacts-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 48px;
+  }
+
+  .artifacts-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 400;
+  }
+
+  .artifacts-count {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+  }
+
+  .artifacts-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  .artifact-card {
+    background: var(--bg);
+    padding: 32px 28px;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    transition: background 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .artifact-card:hover {
+    background: var(--surface);
+  }
+
+  .artifact-card.wip {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  .artifact-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+  }
+
+  .artifact-card:hover::after {
+    transform: scaleX(1);
+  }
+
+  .card-id {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    opacity: 0.7;
+  }
+
+  .card-name {
+    font-family: var(--mono);
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+    letter-spacing: -0.01em;
+  }
+
+  .card-desc {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.65;
+    font-weight: 300;
+    flex: 1;
+    margin-bottom: 24px;
+  }
+
+  .card-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .card-tag {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    padding: 3px 8px;
+  }
+
+  .card-status {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-top: 20px;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .card-status::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .card-status.wip-status {
+    color: var(--text-muted);
+  }
+
+  .card-status.wip-status::before {
+    background: var(--text-muted);
+  }
+
+  /* ── CLOSING ── */
+  .closing-section {
+    padding: 96px 48px 120px;
+    position: relative;
+    z-index: 1;
+    max-width: 640px;
+  }
+
+  .closing-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 24px;
+    font-weight: 400;
+  }
+
+  .closing-text {
+    font-family: var(--mono);
+    font-size: 16px;
+    font-weight: 300;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    letter-spacing: 0.01em;
+    font-style: italic;
+  }
+
+  .closing-text em {
+    color: var(--text-primary);
+    font-style: normal;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border-light);
+    padding: 24px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    z-index: 1;
+  }
+
+  .footer-left {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+  }
+
+  .footer-left span {
+    color: var(--accent);
+  }
+
+  .footer-right {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    nav { padding: 16px 24px; }
+    .hero { padding: 0 24px 64px; }
+    .vertical-text { display: none; }
+    .section-divider { margin: 0 24px; }
+    .dokkodo-section {
+      grid-template-columns: 1fr;
+      gap: 48px;
+      padding: 64px 24px;
+    }
+    .artifacts-section { padding: 64px 24px; }
+    .artifacts-grid { grid-template-columns: 1fr; }
+    .closing-section { padding: 64px 24px 80px; }
+    footer { padding: 20px 24px; flex-direction: column; gap: 8px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">La Via della Solitudine <em>//</em> Dokkōdō</div>
+  <div class="nav-right">Diario operativo</div>
+</nav>
+
+<div class="vertical-text">Pensiero operativo — Sistemi minimi</div>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-label">Artefatti operativi dal campo</div>
+  <h1 class="hero-title">La Via della<br>Solitudine</h1>
+  <div class="hero-title-jp">独行道 — Dokkōdō</div>
+  <p class="hero-desc">
+    Non è un portfolio tradizionale.<br>
+    Non è un blog motivazionale.<br><br>
+    È una raccolta di <strong>sistemi minimi costruiti sul campo</strong> — strumenti nati dall'esigenza di rendere gestibile il caos operativo quotidiano, in contesti imperfetti, con risorse limitate e strutture assenti.
+  </p>
+  <div class="hero-cta">
+    <a href="#artefatti" class="cta-link">Vedi gli artefatti</a>
+    <span class="cta-separator">/</span>
+    <a href="#dokkodo" class="cta-link">Perché Dokkōdō</a>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ── DOKKODO SECTION ── -->
+<section class="dokkodo-section" id="dokkodo">
+  <div class="dokkodo-left">
+    <div class="dokkodo-label">Il riferimento</div>
+    <h2 class="dokkodo-title">Perché<br><em>Dokkōdō</em></h2>
+    <p class="dokkodo-text">
+      Il Dokkōdō è una raccolta di 21 precetti scritti da Miyamoto Musashi una settimana prima di morire. Non è filosofia motivazionale: sono regole asciutte per agire con disciplina quando il contesto non collabora.
+    </p>
+    <p class="dokkodo-text">
+      Questo spazio prende ispirazione da quello spirito. <strong>Non dalla figura del samurai</strong> — ma dalla logica sottostante: costruire sistemi che reggano anche senza strutture perfette, senza approvazione dall'alto, senza condizioni ideali.
+    </p>
+    <p class="dokkodo-text">
+      Ogni artefatto qui documentato nasce da un problema reale in un ambiente reale. Il metodo è sempre lo stesso: osservare il caos, trovare il punto minimo di intervento, rendere tracciabile ciò che prima non lo era.
+    </p>
+  </div>
+
+  <div class="dokkodo-right">
+    <div class="musashi-quote">
+      <p>Non fare nulla che non sia di utilità.<br>Non rimpiangere ciò che hai fatto.</p>
+      <cite>Miyamoto Musashi — Dokkōdō, 1645</cite>
+    </div>
+
+    <div class="not-block">
+      <div class="not-label">Questo spazio non è</div>
+      <div class="not-items">
+        <div class="not-item">Un portfolio di progetti completati</div>
+        <div class="not-item">Una raccolta di best practice universali</div>
+        <div class="not-item">Un blog motivazionale sul lavoro</div>
+        <div class="not-item">Documentazione di sistemi in ambienti ideali</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ── ARTIFACTS SECTION ── -->
+<section class="artifacts-section" id="artefatti">
+  <div class="artifacts-header">
+    <div class="artifacts-label">Artefatti operativi</div>
+    <div class="artifacts-count">3 sistemi documentati</div>
+  </div>
+
+  <div class="artifacts-grid">
+
+    <!-- GreenStamp -->
+    <a href="greenstamp.html" class="artifact-card">
+      <div class="card-id">ART-001 · Gate operativo</div>
+      <div class="card-name">GreenStamp</div>
+      <p class="card-desc">Sistema di allineamento tra cartaceo operativo e gestionali digitali. Verifica che una pratica sia realmente lavorabile prima che entri in produzione.</p>
+      <div class="card-tags">
+        <span class="card-tag">Process control</span>
+        <span class="card-tag">Multi-sistema</span>
+        <span class="card-tag">Tracciabilità</span>
+      </div>
+      <div class="card-status">In uso — dal 01/04/2025</div>
+    </a>
+
+    <!-- TWEWY -->
+    <a href="twewy.html" class="artifact-card wip">
+      <div class="card-id">ART-002 · Fine lavori</div>
+      <div class="card-name">TWEWY</div>
+      <p class="card-desc">Sistema di tracciabilità dei Fine Lavori per evitare chiusure non documentate o non verificabili. The Work Ends Without You.</p>
+      <div class="card-tags">
+        <span class="card-tag">Closure tracking</span>
+        <span class="card-tag">Audit trail</span>
+      </div>
+      <div class="card-status wip-status">In documentazione</div>
+    </a>
+
+    <!-- FMP -->
+    <a href="fmp.html" class="artifact-card wip">
+      <div class="card-id">ART-003 · Parco auto</div>
+      <div class="card-name">FMP</div>
+      <p class="card-desc">Fleet Management Plan. Tentativo di strutturazione e controllo di un parco auto in un contesto caotico. Full Metal Pietro.</p>
+      <div class="card-tags">
+        <span class="card-tag">Fleet management</span>
+        <span class="card-tag">Asset tracking</span>
+      </div>
+      <div class="card-status wip-status">In documentazione</div>
+    </a>
+
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ── CLOSING ── -->
+<section class="closing-section">
+  <div class="closing-label">In chiusura</div>
+  <p class="closing-text">
+    Il lavoro, anche quando è <em>invisibile</em>,<br>lascia tracce.<br><br>
+    Questo spazio esiste per <em>renderle leggibili</em>.
+  </p>
+</section>
+
+<footer>
+  <div class="footer-left">La Via della Solitudine <span>·</span> Dokkōdō <span>·</span> Diario operativo</div>
+  <div class="footer-right">独行道</div>
+</footer>
+
+</body>
+</html>
