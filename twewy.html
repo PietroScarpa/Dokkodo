@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TWEWY — Artefatto Operativo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,300&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0e0e;
+    --surface: #141414;
+    --border: #2a2a2a;
+    --border-light: #1e1e1e;
+    --text-primary: #e8e8e4;
+    --text-secondary: #a8a89e;
+    --text-muted: #52524e;
+    --accent: #4a7c59;
+    --accent-dim: #2a4a34;
+    --accent-glow: rgba(74, 124, 89, 0.12);
+    --warning: #8a7040;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text-primary); font-family: var(--sans); font-weight: 300; min-height: 100vh; }
+  .site-header { border-bottom: 1px solid var(--border); padding: 18px 48px; display: flex; align-items: center; justify-content: space-between; }
+  .site-logo { font-family: var(--mono); font-size: 11px; color: var(--text-muted); letter-spacing: 0.15em; text-transform: uppercase; }
+  .site-logo span { color: var(--accent); }
+  .nav-tag { font-family: var(--mono); font-size: 10px; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; }
+  .page { max-width: 860px; margin: 0 auto; padding: 64px 48px 120px; }
+  .artifact-meta { display: flex; align-items: flex-start; gap: 32px; margin-bottom: 56px; padding-bottom: 48px; border-bottom: 1px solid var(--border-light); }
+  .stamp-mark { flex-shrink: 0; width: 72px; height: 72px; border: 2px solid var(--accent); border-radius: 2px; display: flex; align-items: center; justify-content: center; position: relative; background: var(--accent-glow); }
+  .stamp-mark::before { content: ''; position: absolute; inset: 5px; border: 1px solid var(--accent-dim); }
+  .stamp-inner { font-family: var(--mono); font-size: 9px; color: var(--accent); letter-spacing: 0.05em; text-transform: uppercase; text-align: center; line-height: 1.5; font-weight: 500; }
+  .artifact-title-block { flex: 1; }
+  .artifact-id { font-family: var(--mono); font-size: 10px; color: var(--accent); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 8px; opacity: 0.7; }
+  h1 { font-family: var(--mono); font-size: 28px; font-weight: 400; color: var(--text-primary); letter-spacing: -0.01em; line-height: 1.2; margin-bottom: 6px; }
+  .artifact-subtitle { font-family: var(--mono); font-size: 11px; color: var(--text-muted); letter-spacing: 0.08em; margin-bottom: 12px; }
+  .artifact-tagline { font-size: 14px; color: var(--text-secondary); font-weight: 300; line-height: 1.65; max-width: 520px; margin-bottom: 16px; }
+  .meta-badges { display: flex; gap: 8px; flex-wrap: wrap; }
+  .badge { font-family: var(--mono); font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; padding: 4px 10px; border: 1px solid var(--border); color: var(--text-muted); border-radius: 2px; }
+  .badge.active { border-color: var(--accent-dim); color: var(--accent); background: var(--accent-glow); }
+  .section { margin-bottom: 52px; }
+  .section-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 20px; display: flex; align-items: center; gap: 12px; font-weight: 400; }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--accent-dim); max-width: 200px; }
+  .prose { font-size: 14px; line-height: 1.8; color: var(--text-secondary); font-weight: 300; max-width: 640px; }
+  .prose + .prose { margin-top: 12px; }
+  .prose strong { color: var(--text-primary); font-weight: 400; }
+  .definition-block { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); padding: 24px 28px; margin-top: 20px; max-width: 640px; }
+  .definition-label { font-family: var(--mono); font-size: 9px; color: var(--accent); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 12px; opacity: 0.8; }
+  .definition-text { font-size: 13px; color: var(--text-secondary); line-height: 1.75; font-weight: 300; }
+  .definition-text strong { color: var(--text-primary); font-weight: 400; }
+  .examples-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+  .example-tag { font-family: var(--mono); font-size: 10px; color: var(--text-secondary); border: 1px solid var(--border); padding: 4px 10px; font-style: italic; }
+  .split-block { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 8px; }
+  .split-cell { background: var(--surface); padding: 24px; }
+  .split-cell-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 12px; font-weight: 400; }
+  .split-cell.before .split-cell-label { color: var(--warning); }
+  .split-cell.after .split-cell-label { color: var(--accent); }
+  .split-cell p { font-size: 13px; line-height: 1.7; color: var(--text-secondary); font-weight: 300; }
+  .process-steps { display: flex; flex-direction: column; gap: 0; margin-top: 8px; }
+  .step { display: grid; grid-template-columns: 40px 1fr; }
+  .step-number-col { display: flex; flex-direction: column; align-items: center; padding-top: 4px; }
+  .step-num { font-family: var(--mono); font-size: 10px; color: var(--accent); width: 24px; height: 24px; border: 1px solid var(--accent-dim); display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: var(--accent-glow); }
+  .step-line { flex: 1; width: 1px; background: var(--border); margin-top: 4px; min-height: 24px; }
+  .step:last-child .step-line { display: none; }
+  .step-content { padding: 0 0 28px 20px; }
+  .step-title { font-family: var(--mono); font-size: 12px; font-weight: 500; color: var(--text-primary); margin-bottom: 4px; letter-spacing: 0.02em; }
+  .step-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.65; font-weight: 300; }
+  .step-systems { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+  .sys-tag { font-family: var(--mono); font-size: 9px; color: var(--text-muted); border: 1px solid var(--border); padding: 2px 8px; letter-spacing: 0.1em; }
+  .output-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px; }
+  .output-card { background: var(--surface); border: 1px solid var(--border); padding: 20px; }
+  .output-type { font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 10px; font-weight: 400; }
+  .output-name { font-family: var(--mono); font-size: 13px; color: var(--text-primary); margin-bottom: 6px; }
+  .output-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.65; font-weight: 300; }
+  .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 12px; }
+  .stat-cell { background: var(--surface); padding: 24px; }
+  .stat-label { font-family: var(--mono); font-size: 9px; color: var(--accent); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 10px; opacity: 0.8; }
+  .stat-value { font-family: var(--mono); font-size: 22px; font-weight: 400; color: var(--text-primary); margin-bottom: 4px; }
+  .stat-note { font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+  .learning-block { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); padding: 24px 28px; }
+  .learning-block p { font-size: 14px; line-height: 1.8; color: var(--text-secondary); font-weight: 300; }
+  .learning-block p + p { margin-top: 12px; }
+  .learning-block strong { color: var(--text-primary); font-weight: 400; }
+  .name-block { background: var(--surface); border: 1px solid var(--border); padding: 24px 28px; margin-top: 8px; max-width: 640px; }
+  .name-ref { font-family: var(--mono); font-size: 10px; color: var(--accent); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 12px; opacity: 0.8; }
+  .name-title { font-family: var(--mono); font-size: 14px; color: var(--text-primary); margin-bottom: 10px; font-weight: 400; }
+  .name-text { font-size: 13px; color: var(--text-secondary); line-height: 1.75; font-weight: 300; }
+  .name-text strong { color: var(--text-primary); font-weight: 400; }
+  .principles-list { display: flex; flex-direction: column; gap: 12px; margin-top: 8px; }
+  .principle-item { display: flex; gap: 16px; align-items: flex-start; }
+  .principle-mark { font-family: var(--mono); font-size: 10px; color: var(--accent); margin-top: 2px; flex-shrink: 0; }
+  .principle-text { font-size: 13px; color: var(--text-secondary); line-height: 1.65; font-weight: 300; }
+  .principle-text strong { color: var(--text-primary); font-weight: 400; }
+  .artifact-footer { margin-top: 72px; padding-top: 24px; border-top: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; }
+  .footer-stamp { font-family: var(--mono); font-size: 10px; color: var(--text-muted); letter-spacing: 0.1em; }
+  .footer-stamp span { color: var(--accent); }
+  .back-link { font-family: var(--mono); font-size: 10px; color: var(--text-muted); text-decoration: none; letter-spacing: 0.1em; text-transform: uppercase; transition: color 0.2s; }
+  .back-link:hover { color: var(--accent); }
+  @media (max-width: 640px) {
+    .page { padding: 40px 24px 80px; }
+    .site-header { padding: 16px 24px; }
+    .artifact-meta { flex-direction: column; gap: 20px; }
+    .split-block { grid-template-columns: 1fr; }
+    .output-grid { grid-template-columns: 1fr; }
+    .stats-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-logo">La Via della Solitudine <span>//</span> Dokkōdō</div>
+  <div class="nav-tag">Artefatto Operativo</div>
+</header>
+
+<main class="page">
+
+  <div class="artifact-meta">
+    <div class="stamp-mark">
+      <div class="stamp-inner">TWE<br>WY</div>
+    </div>
+    <div class="artifact-title-block">
+      <div class="artifact-id">ART-002 &nbsp;·&nbsp; Tracciabilità Fine Lavori</div>
+      <h1>TWEWY</h1>
+      <div class="artifact-subtitle">The Work Ends Without You</div>
+      <p class="artifact-tagline">Sistema di tracciabilità dei Fine Lavori: lavorazioni residue su veicoli già consegnati, che rischiano di chiudersi per caso — o di non chiudersi affatto.</p>
+      <div class="meta-badges">
+        <span class="badge active">In uso</span>
+        <span class="badge">Closure tracking</span>
+        <span class="badge">Audit trail</span>
+        <span class="badge">Fine Lavori</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">01 — Contesto</div>
+    <p class="prose">Un Fine Lavoro non è un lavoro incompleto per negligenza. È una lavorazione <strong>tecnicamente impossibile da concludere prima della consegna</strong> del veicolo: il componente non è arrivato in tempo, la parte era danneggiata e non sostituibile nel breve, la lavorazione richiede condizioni che al momento della consegna non erano disponibili.</p>
+    <p class="prose">Il veicolo esce ugualmente. La pratica viene chiusa. Il Fine Lavoro resta — ma senza un sistema che lo tenga in vita, tende a scomparire.</p>
+    <div class="definition-block">
+      <div class="definition-label">Cos'è un Fine Lavoro</div>
+      <p class="definition-text">Una lavorazione marginale <strong>rimasta aperta dopo la consegna del veicolo</strong>, documentata su scheda dedicata e tracciata in log separato dal flusso principale. Non è un errore operativo: è una categoria di lavoro con il suo ciclo di vita distinto.</p>
+      <div class="examples-row">
+        <span class="example-tag">adesivo mancante</span>
+        <span class="example-tag">scritta modello assente</span>
+        <span class="example-tag">plancia illuminazione da sostituire</span>
+        <span class="example-tag">componente non consegnato per tempo</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">02 — Prima / Dopo</div>
+    <div class="split-block">
+      <div class="split-cell before">
+        <div class="split-cell-label">Senza sistema</div>
+        <p>I Fine Lavori venivano chiusi senza documentazione verificabile, o non venivano chiusi affatto. La chiusura dipendeva dal caso: una visita a sorpresa del cliente, una rilavorazione sullo stesso veicolo, il ritrovamento fortuito di un componente in magazzino. Chi non era presente non sapeva, e non poteva sapere.</p>
+      </div>
+      <div class="split-cell after">
+        <div class="split-cell-label">Con TWEWY</div>
+        <p>Ogni Fine Lavoro viene registrato al momento dell'apertura su scheda dedicata e inserito nel log. Lo stato è visibile, la responsabilità è assegnata, la chiusura lascia una traccia. Il lavoro non finisce senza di te — finisce con una firma.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">03 — Come funziona</div>
+    <div class="process-steps">
+      <div class="step">
+        <div class="step-number-col"><div class="step-num">1</div><div class="step-line"></div></div>
+        <div class="step-content">
+          <div class="step-title">Identificazione pre-consegna</div>
+          <p class="step-desc">Prima che il veicolo esca, le lavorazioni non completabili vengono identificate e classificate come Fine Lavori. Non è un'eccezione al processo: è una categoria prevista.</p>
+          <div class="step-systems"><span class="sys-tag">valutazione operativa</span></div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-number-col"><div class="step-num">2</div><div class="step-line"></div></div>
+        <div class="step-content">
+          <div class="step-title">Apertura scheda dedicata</div>
+          <p class="step-desc">Viene compilata una scheda Fine Lavoro visivamente distinta dalla scheda lavoro standard. Chi gestisce le pratiche riconosce immediatamente la natura residua della lavorazione senza leggere l'intera documentazione.</p>
+          <div class="step-systems"><span class="sys-tag">scheda cartacea dedicata</span><span class="sys-tag">formato visivamente distinto</span></div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-number-col"><div class="step-num">3</div><div class="step-line"></div></div>
+        <div class="step-content">
+          <div class="step-title">Registrazione nel log</div>
+          <p class="step-desc">Il Fine Lavoro viene inserito nel log Excel con targa, descrizione della lavorazione residua, data di apertura e stato. Il log è separato dal log GreenStamp — i due sistemi convivono ma non si sovrappongono.</p>
+          <div class="step-systems"><span class="sys-tag">log excel dedicato</span><span class="sys-tag">separato da greenstamp</span></div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-number-col"><div class="step-num">4</div></div>
+        <div class="step-content">
+          <div class="step-title">Chiusura tracciata</div>
+          <p class="step-desc">Quando la lavorazione viene completata, la chiusura viene registrata nel log con data e note. Il Fine Lavoro non scompare — viene marcato come concluso, con una traccia verificabile.</p>
+          <div class="step-systems"><span class="sys-tag">chiusura con data</span><span class="sys-tag">audit trail</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">04 — Output tracciabile</div>
+    <div class="output-grid">
+      <div class="output-card">
+        <div class="output-type">Documento operativo</div>
+        <div class="output-name">Scheda Fine Lavoro</div>
+        <p class="output-desc">Formato cartaceo visivamente distinto dalla scheda lavoro standard. Permette a chiunque gestisca la pratica di identificare immediatamente la natura residua della lavorazione senza leggere l'intera documentazione.</p>
+      </div>
+      <div class="output-card">
+        <div class="output-type">Registro digitale</div>
+        <div class="output-name">Log Excel Fine Lavori</div>
+        <p class="output-desc">Log separato dal flusso GreenStamp. Tiene aperto il Fine Lavoro fino alla chiusura esplicita, con traccia di apertura, stato intermedio e chiusura. Verificabile in qualsiasi momento, indipendentemente dalla presenza fisica della scheda.</p>
+      </div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-cell">
+        <div class="stat-label">Periodo</div>
+        <div class="stat-value">2025</div>
+        <div class="stat-note">Primo anno di operatività del sistema</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-label">Fine Lavori tracciati</div>
+        <div class="stat-value">58</div>
+        <div class="stat-note">Lavorazioni residue registrate e gestite a log</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-label">Senza sistema</div>
+        <div class="stat-value">caso</div>
+        <div class="stat-note">Chiusura dipendente da visita cliente, rilavorazione o ritrovamento fortuito in magazzino</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">05 — Osservazioni sul campo</div>
+    <div class="learning-block">
+      <p>Il problema dei Fine Lavori non era la mancanza di volontà di chiuderli. Era che, una volta uscito il veicolo, <strong>il lavoro diventava invisibile</strong>. Non c'era un posto dove esistesse — esisteva solo nella memoria di chi lo sapeva. E la memoria individuale, in un contesto operativo ad alta rotazione, non è un sistema affidabile.</p>
+      <p>Senza TWEWY, la chiusura dipendeva da eventi non governabili: il cliente che tornava per caso, una rilavorazione sullo stesso veicolo, un componente ritrovato in magazzino. Non era gestione — era fortuna.</p>
+      <p>La scheda visivamente distinta è una scelta di <strong>design operativo deliberato</strong>: non basta che il dato sia nel log. Chi lavora fisicamente con le pratiche deve capire immediatamente, senza leggere, che quella scheda ha una storia e uno stato diverso. Il formato è il messaggio.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">06 — Sul nome</div>
+    <div class="name-block">
+      <div class="name-ref">Riferimento culturale — The World Ends With You, Square Enix 2007</div>
+      <div class="name-title">The Work Ends Without You</div>
+      <p class="name-text">Nel gioco, il mondo letteralmente finisce in assenza del protagonista — ogni evento è condizionato dalla sua presenza. Applicato al contesto operativo: <strong>il lavoro finisce senza lasciare traccia se non ci sei tu a documentarlo</strong>. Il Fine Lavoro non viene chiuso perché nessuno lo sa. Non viene reclamato perché nessuno lo vede. Esiste solo finché esiste nella memoria di chi lo ha aperto — e quella memoria ha un ciclo di vita più breve del lavoro stesso.</p>
+      <p class="name-text" style="margin-top:12px;">Il nome non è decorativo. Descrive esattamente il problema che il sistema risolve.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">07 — Principi applicati</div>
+    <div class="principles-list">
+      <div class="principle-item">
+        <span class="principle-mark">—</span>
+        <span class="principle-text"><strong>Il lavoro non finisce quando smetti di farlo.</strong> Finisce quando è documentato come concluso. Prima di quel momento, è ancora aperto — anche se nessuno ci pensa.</span>
+      </div>
+      <div class="principle-item">
+        <span class="principle-mark">—</span>
+        <span class="principle-text"><strong>Distinguere per categoria, non per priorità.</strong> I Fine Lavori non sono pratiche in ritardo: sono una categoria operativa distinta, con il suo ciclo di vita. La scheda dedicata esiste per questo.</span>
+      </div>
+      <div class="principle-item">
+        <span class="principle-mark">—</span>
+        <span class="principle-text"><strong>Il formato comunica prima del contenuto.</strong> Una scheda visivamente diversa trasmette informazione prima della lettura. In ambienti ad alta velocità operativa, questo vale più di qualsiasi nota testuale.</span>
+      </div>
+      <div class="principle-item">
+        <span class="principle-mark">—</span>
+        <span class="principle-text"><strong>Separazione dei log per separazione dei flussi.</strong> TWEWY e GreenStamp condividono l'ambiente ma non il registro. Mischiare i due flussi avrebbe reso entrambi meno leggibili.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">08 — Rilevanza professionale</div>
+    <p class="prose">TWEWY affronta un problema trasversale a qualsiasi contesto operativo: la <strong>gestione delle eccezioni strutturali</strong>. Non i casi anomali occasionali, ma le situazioni che si ripetono con frequenza sufficiente da richiedere un flusso dedicato — distinto da quello standard, ma integrato nello stesso ambiente.</p>
+    <p class="prose" style="margin-top:12px;">Vale la pena essere precisi su un punto: un Fine Lavoro non è una non conformità di lavorazione — la lavorazione non è stata eseguita male, è stata rimandata per ragioni oggettive. Diventa però una <strong>non conformità di processo</strong> nel momento in cui non viene tracciato, assegnato e gestito fino alla chiusura. La distinzione è rilevante in qualsiasi contesto orientato alla qualità: ISO 9001 richiede che le non conformità siano identificate, documentate e risolte — indipendentemente dalla loro origine. TWEWY nasce esattamente per questo, anche senza che fosse il brief esplicito.</p>
+    <p class="prose" style="margin-top:12px;">Rilevante per ruoli in: operations management, process improvement, quality management, workflow design, back-office optimization in contesti ad alta variabilità.</p>
+  </div>
+
+  <div class="artifact-footer">
+    <div class="footer-stamp">ART-002 &nbsp;<span>·</span>&nbsp; TWEWY &nbsp;<span>·</span>&nbsp; La Via della Solitudine</div>
+    <a href="index.html" class="back-link">← Tutti gli artefatti</a>
+  </div>
+
+</main>
+</body>
+</html>
