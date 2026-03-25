@@ -13,8 +13,8 @@
     --border: #2a2a2a;
     --border-light: #1e1e1e;
     --text-primary: #e8e8e4;
-    --text-secondary: #7a7a72;
-    --text-muted: #444440;
+    --text-secondary: #a8a89e;
+    --text-muted: #52524e;
     --accent: #4a7c59;
     --accent-dim: #2a4a34;
     --accent-glow: rgba(74, 124, 89, 0.15);
@@ -632,6 +632,25 @@
         <p class="output-desc">Registro datato con stato, operatore e note. Traccia anche le modifiche successive alla pratica, creando una cronologia verificabile per ogni entry. Permette audit retroattivo e individuazione di pattern nei disallineamenti.</p>
       </div>
     </div>
+
+    <!-- Dati operativi -->
+    <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 12px;">
+      <div style="background: var(--surface); padding: 24px;">
+        <div style="font-family: var(--mono); font-size: 9px; color: var(--accent); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 10px; opacity: 0.8;">Periodo</div>
+        <div style="font-family: var(--mono); font-size: 22px; font-weight: 400; color: var(--text-primary); margin-bottom: 4px;">8 mesi</div>
+        <div style="font-size: 12px; color: var(--text-secondary);">Apr — Dic 2025</div>
+      </div>
+      <div style="background: var(--surface); padding: 24px;">
+        <div style="font-family: var(--mono); font-size: 9px; color: var(--accent); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 10px; opacity: 0.8;">Pratiche processate</div>
+        <div style="font-family: var(--mono); font-size: 22px; font-weight: 400; color: var(--text-primary); margin-bottom: 4px;">~1.200</div>
+        <div style="font-size: 12px; color: var(--text-secondary);">1.300 entry log, ~8% duplicate per rischedulazione</div>
+      </div>
+      <div style="background: var(--surface); padding: 24px;">
+        <div style="font-family: var(--mono); font-size: 9px; color: var(--accent); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 10px; opacity: 0.8;">Interventi preventivi</div>
+        <div style="font-family: var(--mono); font-size: 22px; font-weight: 400; color: var(--text-primary); margin-bottom: 4px;">~60%</div>
+        <div style="font-size: 12px; color: var(--text-secondary);">Pratiche create a portale prima dell'arrivo in cabina</div>
+      </div>
+    </div>
   </div>
 
   <!-- ── SEZIONE 5: COSA HO IMPARATO ── -->
@@ -640,16 +659,18 @@
 
     <div class="learning-block">
       <p>
-        Il sistema non risolve il problema a monte — i disallineamenti continuano a esistere. Quello che cambia è la visibilità: il problema viene intercettato <strong>prima della lavorazione</strong>, non durante o dopo. La perdita di tempo si sposta da "correggere un errore in produzione" a "verificare prima di procedere".
+        Il sistema non risolve il problema a monte — i disallineamenti tra cartaceo e digitale continuano a esistere. Quello che cambia è il <strong>punto di intercettazione</strong>: il problema viene trovato prima della lavorazione, non durante. La perdita di tempo si sposta da "correggere un errore in produzione" a "verificare prima di procedere".
+      </p>
+      <p>
+        Il caso più frequente — circa il 60% delle pratiche processate — riguarda la creazione della pratica sul portale di verniciatura <strong>prima che il cartaceo raggiunga le cabine</strong>. Gli operatori delle cabine lavorano su pratiche già impostate a sistema: l'inserimento manuale di nuove entry non è nel loro flusso abituale e genera rallentamenti e errori. GreenStamp ha reso questo passaggio sistematico, sottraendolo alla memoria individuale di chi riceveva la pratica.
       </p>
       <p>
         La doppia traccia fisica/digitale è una scelta deliberata: in ambienti dove l'accesso ai sistemi non è sempre garantito o immediato, il bollino fisico funziona come segnale di fallback leggibile da chiunque, senza credenziali.
       </p>
     </div>
+  </div>
 
-
-    
-   <!-- ── SEZIONE 6: PRINCIPI OPERATIVI ── -->
+  <!-- ── SEZIONE 6: PRINCIPI OPERATIVI ── -->
   <div class="section">
     <div class="section-label">06 — Principi applicati</div>
 
