@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SHoAG — Artefatto Operativo</title>
+<link rel="icon" href="SHoAG_logo.ico" type="image/x-icon">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,300&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0e0e;
+    --surface: #141414;
+    --border: #2a2a2a;
+    --border-light: #1e1e1e;
+    --text-primary: #e8e8e4;
+    --text-secondary: #a8a89e;
+    --text-muted: #52524e;
+    --accent: #4a7c59;
+    --accent-dim: #2a4a34;
+    --accent-glow: rgba(74, 124, 89, 0.12);
+    --warning: #8a7040;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text-primary); font-family: var(--sans); font-weight: 300; min-height: 100vh; }
+  .site-header { border-bottom: 1px solid var(--border); padding: 18px 48px; display: flex; align-items: center; justify-content: space-between; }
+  .site-logo { font-family: var(--mono); font-size: 11px; color: var(--text-muted); letter-spacing: 0.15em; text-transform: uppercase; }
+  .site-logo span { color: var(--accent); }
+  .nav-tag { font-family: var(--mono); font-size: 10px; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; }
+  .page { max-width: 860px; margin: 0 auto; padding: 64px 48px 120px; }
+
+  /* ARTIFACT HEADER */
+  .artifact-meta { display: flex; align-items: flex-start; gap: 32px; margin-bottom: 56px; padding-bottom: 48px; border-bottom: 1px solid var(--border-light); }
+  .stamp-mark { flex-shrink: 0; width: 72px; height: 72px; border: 2px solid var(--accent); border-radius: 2px; display: flex; align-items: center; justify-content: center; position: relative; background: var(--accent-glow); }
+  .stamp-mark::before { content: ''; position: absolute; inset: 5px; border: 1px solid var(--accent-dim); }
+  .stamp-inner { font-family: var(--mono); font-size: 9px; color: var(--accent); text-transform: uppercase; text-align: center; line-height: 1.5; font-weight: 500; letter-spacing: 0.05em; }
+  .artifact-title-block { flex: 1; }
+  .artifact-id { font-family: var(--mono); font-size: 10px; color: var(--accent); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 8px; opacity: 0.7; }
+  h1 { font-family: var(--mono); font-size: 28px; font-weight: 400; color: var(--text-primary); letter-spacing: -0.01em; line-height: 1.2; margin-bottom: 6px; }
+  .artifact-subtitle { font-family: var(--mono); font-size: 11px; color: var(--text-muted); letter-spacing: 0.08em; margin-bottom: 12px; }
+  .artifact-tagline { font-size: 14px; color: var(--text-secondary); font-weight: 300; line-height: 1.65; max-width: 520px; margin-bottom: 16px; }
+  .meta-badges { display: flex; gap: 8px; flex-wrap: wrap; }
+  .badge { font-family: var(--mono); font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; padding: 4px 10px; border: 1px solid var(--border); color: var(--text-muted); border-radius: 2px; }
+  .badge.active { border-color: var(--accent-dim); color: var(--accent); background: var(--accent-glow); }
+  .badge.primary { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); font-weight: 500; }
+
+  /* SECTIONS */
+  .section { margin-bottom: 52px; }
+  .section-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 20px; display: flex; align-items: center; gap: 12px; font-weight: 400; }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--accent-dim); max-width: 200px; }
+  .prose { font-size: 14px; line-height: 1.8; color: var(--text-secondary); font-weight: 300; max-width: 640px; }
+  .prose + .prose { margin-top: 12px; }
+  .prose strong { color: var(--text-primary); font-weight: 400; }
+
+  /* SPLIT */
+  .split-block { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 8px; }
+  .split-cell { background: var(--surface); padding: 24px; }
+  .split-cell-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 12px; font-weight: 400; }
+  .split-cell.before .split-cell-label { color: var(--warning); }
+  .split-cell.after .split-cell-label { color: var(--accent); }
+  .split-cell p { font-size: 13px; line-height: 1.7; color: var(--text-secondary); font-weight: 300; }
+
+  /* STATS */
+  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 12px; }
+  .stat-cell { background: var(--surface); padding: 22px 20px; }
+  .stat-label { font-family: var(--mono); font-size: 9px; color: var(--accent); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 10px; opacity: 0.8; }
+  .stat-value { font-family: var(--mono); font-size: 20px; font-weight: 400; color: var(--text-primary); margin-bottom: 4px; }
+  .stat-note { font-size: 11px; color: var(--text-secondary); line-height: 1.5; }
+
+  /* TECH STACK */
+  .tech-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 8px; }
+  .tech-cell { background: var(--surface); padding: 18px 20px; }
+  .tech-layer { font-family: var(--mono); font-size: 9px; color: var(--accent); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 8px; opacity: 0.8; }
+  .tech-items { display: flex; flex-direction: column; gap: 4px; }
+  .tech-item { font-family: var(--mono); font-size: 11px; color: var(--text-secondary); }
+
+  /* CHANGELOG */
+  .changelog { display: flex; flex-direction: column; gap: 0; margin-top: 8px; }
+  .version-entry { display: grid; grid-template-columns: 80px 1fr; gap: 0; }
+  .version-tag-col { display: flex; flex-direction: column; align-items: flex-start; padding-top: 2px; }
+  .version-tag { font-family: var(--mono); font-size: 11px; font-weight: 500; color: var(--accent); border: 1px solid var(--accent-dim); padding: 3px 8px; background: var(--accent-glow); white-space: nowrap; }
+  .version-line { flex: 1; width: 1px; background: var(--border); margin-top: 4px; margin-left: 20px; min-height: 20px; }
+  .version-entry:last-child .version-line { display: none; }
+  .version-content { padding: 0 0 28px 24px; }
+  .version-title { font-family: var(--mono); font-size: 12px; font-weight: 500; color: var(--text-primary); margin-bottom: 8px; letter-spacing: 0.02em; }
+  .version-items { display: flex; flex-direction: column; gap: 5px; }
+  .version-item { font-size: 13px; color: var(--text-secondary); line-height: 1.55; font-weight: 300; display: flex; gap: 10px; }
+  .version-item::before { content: '·'; color: var(--accent); flex-shrink: 0; font-family: var(--mono); }
+
+  /* LEARNING */
+  .learning-block { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); padding: 24px 28px; }
+  .learning-block p { font-size: 14px; line-height: 1.8; color: var(--text-secondary); font-weight: 300; }
+  .learning-block p + p { margin-top: 12px; }
+  .learning-block strong { color: var(--text-primary); font-weight: 400; }
+
+  /* NAME BLOCK */
+  .name-block { background: var(--surface); border: 1px solid var(--border); padding: 20px 24px; margin-top: 8px; max-width: 640px; display: flex; gap: 20px; align-items: flex-start; }
+  .name-icon { font-family: var(--mono); font-size: 22px; color: var(--accent); flex-shrink: 0; line-height: 1; }
+  .name-body {}
+  .name-title { font-family: var(--mono); font-size: 13px; color: var(--text-primary); margin-bottom: 8px; font-weight: 400; }
+  .name-text { font-size: 13px; color: var(--text-secondary); line-height: 1.7; font-weight: 300; }
+
+  /* PRINCIPLES */
+  .principles-list { display: flex; flex-direction: column; gap: 12px; margin-top: 8px; }
+  .principle-item { display: flex; gap: 16px; align-items: flex-start; }
+  .principle-mark { font-family: var(--mono); font-size: 10px; color: var(--accent); margin-top: 2px; flex-shrink: 0; }
+  .principle-text { font-size: 13px; color: var(--text-secondary); line-height: 1.65; font-weight: 300; }
+  .principle-text strong { color: var(--text-primary); font-weight: 400; }
+
+  /* FOOTER */
+  .artifact-footer { margin-top: 72px; padding-top: 24px; border-top: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; }
+  .footer-stamp { font-family: var(--mono); font-size: 10px; color: var(--text-muted); letter-spacing: 0.1em; }
+  .footer-stamp span { color: var(--accent); }
+  .back-link { font-family: var(--mono); font-size: 10px; color: var(--text-muted); text-decoration: none; letter-spacing: 0.1em; text-transform: uppercase; transition: color 0.2s; }
+  .back-link:hover { color: var(--accent); }
+
+  @media (max-width: 640px) {
+    .page { padding: 40px 24px 80px; }
+    .site-header { padding: 16px 24px; }
+    .artifact-meta { flex-direction: column; gap: 20px; }
+    .split-block { grid-template-columns: 1fr; }
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+    .tech-grid { grid-template-columns: 1fr; }
+    .version-entry { grid-template-columns: 60px 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-logo">La Via della Solitudine <span>//</span> Dokkōdō</div>
+  <div class="nav-tag">Artefatto Operativo</div>
+</header>
+
+<main class="page">
+
+  <div class="artifact-meta">
+    <div class="stamp-mark" style="background: none; border: none; width: 80px; height: 80px; padding: 0;">
+      <img src="SHoAG_logo.png" alt="SHoAG logo" style="width: 80px; height: 80px; object-fit: contain; filter: brightness(0) invert(1) opacity(0.85);">
+    </div>
+    <div class="artifact-title-block">
+      <div class="artifact-id">ART-004 &nbsp;·&nbsp; Software operativo</div>
+      <h1>SHoAG</h1>
+      <div class="artifact-subtitle">Sviluppo autonomo — v4.1 Definitive Edition</div>
+      <p class="artifact-tagline">
+        Tool desktop per la digitalizzazione e standardizzazione delle schede di lavoro in carrozzeria. Sviluppato in autonomia, non commissionato, diventato standard operativo interno.
+      </p>
+      <div class="meta-badges">
+        <span class="badge primary">Standard aziendale</span>
+        <span class="badge active">v4.1 in uso</span>
+        <span class="badge">Python / tkinter</span>
+        <span class="badge">PDF generation</span>
+        <span class="badge">JSON archive</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 01 CONTESTO -->
+  <div class="section">
+    <div class="section-label">01 — Contesto</div>
+    <p class="prose">
+      In una carrozzeria a gestione familiare, il processo di compilazione delle schede di lavoro era interamente manuale: grafie illeggibili, pratiche perse, note scritte a mano irreperibili, nessuna tracciabilità su chi aveva fatto cosa e quando. Ogni volta che una pratica veniva smarrita o un veicolo tornava in lavorazione senza documentazione, la scheda veniva riscritta da zero.
+    </p>
+    <p class="prose">
+      SHoAG nasce per risolvere questo problema — <strong>senza aspettare che qualcuno lo commissionasse</strong>. È stato sviluppato in autonomia, distribuito internamente e adottato come nuovo standard operativo su richiesta della direzione. Il processo manuale non esiste più.
+    </p>
+  </div>
+
+  <!-- 02 PRIMA/DOPO -->
+  <div class="section">
+    <div class="section-label">02 — Prima / Dopo</div>
+    <div class="split-block">
+      <div class="split-cell before">
+        <div class="split-cell-label">Senza SHoAG</div>
+        <p>Schede compilate a mano. Grafie illeggibili, campi saltati, pratiche perse. Nessun archivio strutturato. Ogni veicolo in rilavorazione richiedeva la ricompilazione da zero. Tempo medio di compilazione: ~10 minuti. Nessuna tracciabilità dell'operatore.</p>
+      </div>
+      <div class="split-cell after">
+        <div class="split-cell-label">Con SHoAG</div>
+        <p>Compilazione da GUI, PDF generato per sovrapposizione sulla scheda ufficiale, archivio JSON di tutte le pratiche storiche. Qualsiasi pratica precedente è ricaricabile in un click. Tempo medio: ~2 minuti. Tracciabilità automatica tramite hostname del PC.</p>
+      </div>
+    </div>
+
+    <div class="stats-grid" style="margin-top:12px;">
+      <div class="stat-cell">
+        <div class="stat-label">Tempo compilazione</div>
+        <div class="stat-value">~2 min</div>
+        <div class="stat-note">Da ~10 min manuali. −80%</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-label">Pratiche perse</div>
+        <div class="stat-value">0</div>
+        <div class="stat-note">Archivio JSON persistente e ricaricabile</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-label">Costo sviluppo</div>
+        <div class="stat-value">€ 0</div>
+        <div class="stat-note">Valore stimato 1.000–3.000€ a mercato</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-label">Adozione</div>
+        <div class="stat-value">100%</div>
+        <div class="stat-note">Nuovo standard operativo su richiesta direzione</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 03 COME FUNZIONA -->
+  <div class="section">
+    <div class="section-label">03 — Come funziona</div>
+    <p class="prose">L'operatore apre SHoAG, compila i campi nella GUI — anagrafica cliente, dati veicolo, tipo danno, informazioni assicurative, lavorazioni — e genera il PDF. Il PDF viene sovrapposto alla scheda ufficiale preesistente: il layout rimane invariato, i dati sono posizionati con coordinate precise su ogni campo. Simultaneamente, tutti i dati vengono salvati in un file JSON con nome automatico nel formato <strong>n_pratica.cliente.targa</strong>.</p>
+    <p class="prose" style="margin-top:12px;">Il JSON permette di ricaricare qualsiasi pratica storica, modificarla e rigenerare il PDF senza riscrivere nulla. La firma digitale in calce a ogni PDF riporta l'hostname del PC, garantendo tracciabilità dell'operatore <strong>senza richiedere login o autenticazione</strong> — soluzione minimale adatta a un ambiente in cui sistemi di autenticazione formali non esistono e non sarebbero adottati.</p>
+
+    <div class="tech-grid" style="margin-top:20px;">
+      <div class="tech-cell">
+        <div class="tech-layer">Interfaccia</div>
+        <div class="tech-items">
+          <span class="tech-item">Python 3 / tkinter</span>
+          <span class="tech-item">GUI 6 colonne</span>
+          <span class="tech-item">Sezioni colorate per area</span>
+          <span class="tech-item">Calendario popup per date</span>
+        </div>
+      </div>
+      <div class="tech-cell">
+        <div class="tech-layer">Generazione PDF</div>
+        <div class="tech-items">
+          <span class="tech-item">ReportLab</span>
+          <span class="tech-item">Sovrapposizione su scheda base</span>
+          <span class="tech-item">Coordinate per campo</span>
+          <span class="tech-item">Firma automatica hostname</span>
+        </div>
+      </div>
+      <div class="tech-cell">
+        <div class="tech-layer">Persistenza</div>
+        <div class="tech-items">
+          <span class="tech-item">Archivio JSON per pratica</span>
+          <span class="tech-item">Ricaricamento completo</span>
+          <span class="tech-item">Nome file automatico</span>
+          <span class="tech-item">Distribuzione via PyInstaller</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 04 CHANGELOG -->
+  <div class="section">
+    <div class="section-label">04 — Evoluzione del progetto</div>
+    <p class="prose" style="margin-bottom:24px;">SHoAG ha attraversato 4 major release in circa un anno di sviluppo iterativo. Ogni versione risponde a un problema emerso dall'uso reale, non da specifiche scritte a tavolino.</p>
+
+    <div class="changelog">
+
+      <div class="version-entry">
+        <div class="version-tag-col">
+          <div class="version-tag">v1.0</div>
+          <div class="version-line"></div>
+        </div>
+        <div class="version-content">
+          <div class="version-title">Prima versione funzionante</div>
+          <div class="version-items">
+            <div class="version-item">GUI base con campi anagrafica cliente, dati veicolo, assicurazione</div>
+            <div class="version-item">Generazione PDF per sovrapposizione su scheda base con ReportLab</div>
+            <div class="version-item">Bottoni Stampa PDF e Genera PDF (preview)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="version-entry">
+        <div class="version-tag-col">
+          <div class="version-tag">v2.0</div>
+          <div class="version-line"></div>
+        </div>
+        <div class="version-content">
+          <div class="version-title">Struttura visiva e nuovi campi</div>
+          <div class="version-items">
+            <div class="version-item">Sezioni colorate per area operativa: intestazione, assicurazione, sostituzioni, riparazioni, meccanica</div>
+            <div class="version-item">Campi Telefono, Email, Tipo Danno (dropdown 12 opzioni)</div>
+            <div class="version-item">Refactor layout GUI a 6 colonne, geometria 1050×700</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="version-entry">
+        <div class="version-tag-col">
+          <div class="version-tag">v3.0</div>
+          <div class="version-line"></div>
+        </div>
+        <div class="version-content">
+          <div class="version-title">Tracciabilità e campi assicurativi completi</div>
+          <div class="version-items">
+            <div class="version-item">Tracciabilità automatica tramite socket.gethostname() nelle royalties PDF</div>
+            <div class="version-item">Campi KM, Sinistro Aperto, Sostitutiva (checkbox con logica sì/no sulla scheda), dati polizza completi</div>
+            <div class="version-item">Sezione Lavorazioni Accessorie (4 righe)</div>
+            <div class="version-item">Fix PyInstaller: sys._MEIPASS per path relativi, cartella output separata</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="version-entry">
+        <div class="version-tag-col">
+          <div class="version-tag">v3.1</div>
+          <div class="version-line"></div>
+        </div>
+        <div class="version-content">
+          <div class="version-title">Archivio JSON e gestione pratiche</div>
+          <div class="version-items">
+            <div class="version-item">Salvataggio JSON con nome automatico n_pratica.cliente.targa</div>
+            <div class="version-item">Bottone Carica Pratica: riapertura e ripopolamento completo dei campi</div>
+            <div class="version-item">Prefisso #. per pratiche private, calcolo giorni lavorativi lun-ven</div>
+            <div class="version-item">Limiti caratteri per campo, conferma prima del reset</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="version-entry">
+        <div class="version-tag-col">
+          <div class="version-tag">v4.0</div>
+          <div class="version-line"></div>
+        </div>
+        <div class="version-content">
+          <div class="version-title">Definitive Edition</div>
+          <div class="version-items">
+            <div class="version-item">Secondo campo Comunicazioni/Quota per pratiche complesse</div>
+            <div class="version-item">Date readonly con calendario popup — eliminato input libero</div>
+            <div class="version-item">Versioning aggiornato a "Definitive Edition"</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="version-entry">
+        <div class="version-tag-col">
+          <div class="version-tag">v4.1</div>
+        </div>
+        <div class="version-content">
+          <div class="version-title">Fine tuning e distribuzione stabile</div>
+          <div class="version-items">
+            <div class="version-item">Coordinate PDF calibrate su tutti i campi</div>
+            <div class="version-item">Limiti caratteri personalizzati per campo (N_Pratica: 9, KM: 10, Targa: 18…)</div>
+            <div class="version-item">Consolidamento stabile per distribuzione interna — versione corrente in uso</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 05 OSSERVAZIONI -->
+  <div class="section">
+    <div class="section-label">05 — Osservazioni sul campo</div>
+    <div class="learning-block">
+      <p>SHoAG è l'artefatto che ha cambiato una <strong>baseline operativa aziendale</strong>. Non è un sistema parallelo che convive con il vecchio processo — il vecchio processo non esiste più. La direzione ha richiesto l'adozione a tutti gli operatori. Questo distingue SHoAG dagli altri artefatti del progetto: non è stato costruito per sopperire a un'assenza di sistema, è diventato il sistema.</p>
+      <p>Lo sviluppo iterativo su 4 major release riflette un principio preciso: <strong>nessuna funzione è stata aggiunta prima che il problema che doveva risolvere si manifestasse nell'uso reale</strong>. Il changelog non è una roadmap eseguita — è la cronologia di problemi incontrati e risolti uno alla volta.</p>
+      <p>La scelta di usare l'hostname come traccia dell'operatore invece di un sistema di login è deliberata: in un ambiente in cui l'autenticazione formale non sarebbe mai adottata, un sistema che la richiedesse non sarebbe usato. La soluzione minimale funziona perché non genera attrito.</p>
+    </div>
+  </div>
+
+  <!-- 06 NOME -->
+  <div class="section">
+    <div class="section-label">06 — Sul nome</div>
+    <div class="name-block">
+      <div class="name-icon">//</div>
+      <div class="name-body">
+        <div class="name-title">SHoAG è un acronimo interno.</div>
+        <p class="name-text">Il nome completo ha senso solo nel contesto in cui il tool è stato costruito — e in quel contesto lo conoscono tutti. All'esterno rimane l'acronimo: quattro lettere che identificano il progetto senza esporre l'ambiente in cui opera. Chi ha bisogno di sapere, sa già.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 07 PRINCIPI -->
+  <div class="section">
+    <div class="section-label">07 — Principi applicati</div>
+    <div class="principles-list">
+      <div class="principle-item">
+        <span class="principle-mark">—</span>
+        <span class="principle-text"><strong>Non aspettare la commissione.</strong> SHoAG non è stato richiesto. È stato costruito perché il problema era visibile e la soluzione era alla portata. La direzione ha adottato ciò che funzionava già.</span>
+      </div>
+      <div class="principle-item">
+        <span class="principle-mark">—</span>
+        <span class="principle-text"><strong>Iterare sul reale, non sul previsto.</strong> Ogni versione risponde a un problema emerso dall'uso. Nessuna funzione è stata progettata in anticipo su un bisogno ipotetico.</span>
+      </div>
+      <div class="principle-item">
+        <span class="principle-mark">—</span>
+        <span class="principle-text"><strong>La soluzione minimale che funziona vale più della soluzione corretta che non viene usata.</strong> Hostname invece di login. PDF sovrapposto invece di nuovo formato. Adattarsi all'ambiente invece di trasformarlo.</span>
+      </div>
+      <div class="principle-item">
+        <span class="principle-mark">—</span>
+        <span class="principle-text"><strong>Il formato non cambia, cambiano i dati.</strong> SHoAG non ha sostituito la scheda ufficiale — ci si sovrappone. Chi ha approvato il vecchio formato non ha dovuto approvare nulla di nuovo.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 08 RILEVANZA -->
+  <div class="section">
+    <div class="section-label">08 — Rilevanza professionale</div>
+    <p class="prose">SHoAG dimostra la capacità di <strong>identificare un problema operativo, sviluppare una soluzione software funzionante in autonomia e portarla all'adozione completa</strong> in un contesto non strutturato. Non è un progetto personale rimasto in un repository: è in produzione, è usato ogni giorno, ha eliminato un processo manuale.</p>
+    <p class="prose" style="margin-top:12px;">L'intero ciclo — identificazione del problema, sviluppo iterativo, distribuzione, adozione — è stato gestito da una sola persona, senza budget, senza commissione formale e senza infrastruttura IT dedicata. Rilevante per ruoli in: operations management, process improvement, digital transformation in contesti SME, project management di iniziative bottom-up.</p>
+  </div>
+
+  <div class="artifact-footer">
+    <div class="footer-stamp">ART-004 &nbsp;<span>·</span>&nbsp; SHoAG &nbsp;<span>·</span>&nbsp; La Via della Solitudine</div>
+    <a href="index.html" class="back-link">← Tutti gli artefatti</a>
+  </div>
+
+</main>
+</body>
+</html>
